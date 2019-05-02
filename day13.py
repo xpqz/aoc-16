@@ -40,6 +40,31 @@ def dijkstra(start, end):
 
     return path
 
+
+def dijkstra2(start, max_distance=50):
+    """
+    Unique points reachable at 50 steps or fewer.
+    """
+    frontier = []
+    heapq.heappush(frontier, (0, start))
+    cost_so_far = {start: 0}
+    seen = {start}
+
+    while frontier:
+        current = heapq.heappop(frontier)[1]
+
+        for neighbour in neighbours(current[0], current[1]):
+            new_cost = cost_so_far[current] + 1
+            if new_cost <= max_distance:
+                if neighbour not in cost_so_far or new_cost < cost_so_far[neighbour]:
+                    cost_so_far[neighbour] = new_cost
+                    heapq.heappush(frontier, (new_cost, neighbour))
+                    seen.add(neighbour)
+
+    return seen
+
 if __name__ == "__main__":
     path = dijkstra((1, 1), (31, 39))
     print(len(path)-1)  # skip start point
+
+    print(len(dijkstra2((1, 1))))
