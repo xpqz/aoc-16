@@ -25,9 +25,6 @@ def find_keys(seed="ahsbgdzn"):
     for i in count():
         digest = h(i, seed=seed)
         match = pattern.search(digest)
-
-        # If we have three in a row, search the subsequent
-        # 1000 hashes for a five-in-a-row of the same char.
         if match:
             pattern2 = re.compile(match.group(1)+"{5}")
             for j in range(i+1, i+1002):
@@ -55,8 +52,5 @@ def find_stretched_keys(seed="ahsbgdzn"):
                 return i
 
 if __name__ == "__main__":
-    index = find_keys(seed="ahsbgdzn")
-    print(index)
-
-    index = find_stretched_keys(seed="ahsbgdzn")
-    print(index)
+    print(find_keys(seed="ahsbgdzn"))
+    print(find_stretched_keys(seed="ahsbgdzn"))
