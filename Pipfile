@@ -9,6 +9,7 @@ autopep8 = "*"
 
 [packages]
 more-itertools = "*"
+pylint = "*"
 
 [requires]
 python_version = "3.7"
