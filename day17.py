@@ -59,7 +59,43 @@ def breadth_first_search(seed, start_point=(0, 0), end_point=(3, 3)):
     return path
 
 
+def longest_path(seed, start_point=(0, 0), end_point=(3, 3)):
+    frontier = []
+    start = start_point + (open_doors(start_point, seed),)
+    heapq.heappush(frontier, (0, start, ""))
+
+    maxlen = 0
+
+    while frontier:
+        item = heapq.heappop(frontier)
+
+        current = item[1]
+        path = item[2]
+
+        pos = current[:-1]
+        doors = current[-1]
+
+        if pos == end_point:
+            if len(path) > maxlen:
+                maxlen = len(path)
+            continue
+
+        for new_pos, door in neighbours(pos, doors):
+            new_path = path + door
+            key = seed + new_path
+            new_doors = open_doors(new_pos, key)
+
+            if not new_doors and new_pos != end_point:
+                continue
+
+            neighbour = new_pos + (new_doors,)
+            heapq.heappush(frontier, (len(new_path), neighbour, new_path))
+
+    return maxlen
+
+
 if __name__ == "__main__":
     seed = "qzthpkfp"
 
     print(breadth_first_search(seed))
+    print(longest_path(seed))
