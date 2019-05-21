@@ -8,16 +8,9 @@ See https://pypi.org/project/blist/ http://stutzbachenterprises.com/blist/
 """
 from blist import blist
 
-def elf_circle(length):
-    circle = blist()
-
-    for elf_id in range(1, length+1):
-        circle.append(elf_id)
-
-    return circle
 
 def steal_opposite(elfcount=3_014_603):
-    circle = elf_circle(elfcount)
+    circle = blist([elf_id for elf_id in range(1, elfcount+1)])
 
     pos = 0
     while len(circle) > 1:
@@ -36,14 +29,13 @@ def steal_opposite(elfcount=3_014_603):
 
 
 def steal_next(elfcount=3_014_603):
-    circle = elf_circle(elfcount)
+    circle = blist([elf_id for elf_id in range(1, elfcount+1)])
 
     pos = 0
     while len(circle) > 1:
         elfcount = len(circle)
         target = (pos+1) % elfcount
         del circle[target]
-
         pos = target
 
     return circle[0]
