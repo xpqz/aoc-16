@@ -13,17 +13,14 @@ def steal_opposite(elfcount=3_014_603):
     circle = blist([elf_id for elf_id in range(1, elfcount+1)])
 
     pos = 0
-    while len(circle) > 1:
-        elfcount = len(circle)
+    elfcount = len(circle)
+    while elfcount > 1:
         pos %= elfcount
-        half = elfcount // 2
-        opposite = (pos + half) % elfcount
+        opposite = (pos + elfcount // 2) % elfcount
         del circle[opposite]
-
         if opposite > pos:
-            pos += 1
-            if pos >= len(circle):
-                pos = 0
+            pos = pos+1
+        elfcount -= 1
 
     return circle[0]
 
@@ -32,11 +29,12 @@ def steal_next(elfcount=3_014_603):
     circle = blist([elf_id for elf_id in range(1, elfcount+1)])
 
     pos = 0
-    while len(circle) > 1:
-        elfcount = len(circle)
+    elfcount = len(circle)
+    while elfcount > 1:
         target = (pos+1) % elfcount
         del circle[target]
         pos = target
+        elfcount -= 1
 
     return circle[0]
 
