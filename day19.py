@@ -19,7 +19,7 @@ def steal_opposite(elfcount=3_014_603):
         opposite = (pos + elfcount // 2) % elfcount
         del circle[opposite]
         if opposite > pos:
-            pos = pos+1
+            pos += 1
         elfcount -= 1
 
     return circle[0]
