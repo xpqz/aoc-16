@@ -31,9 +31,8 @@ def steal_next(elfcount=3_014_603):
     pos = 0
     elfcount = len(circle)
     while elfcount > 1:
-        target = (pos+1) % elfcount
-        del circle[target]
-        pos = target
+        pos = (pos+1) % elfcount
+        del circle[pos]
         elfcount -= 1
 
     return circle[0]
