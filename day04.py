@@ -1,5 +1,4 @@
 from collections import Counter
-from itertools import cycle, islice
 import re
 
 def read_data(filename="data/input04.data"):
@@ -61,10 +60,9 @@ def decrypt(row):
 if __name__ == "__main__":
     data = parse_data(read_data())
 
-    valid_rooms = filter(lambda r: verify(r), data)
-    print(sum(item[1] for item in valid_rooms))
+    print(sum(item[1] for item in filter(verify, data)))
 
-    for r in filter(lambda r: verify(r), data):
+    for r in filter(verify, data):
         words = decrypt(r)
         if "northpole" in words:
             print(r, words)

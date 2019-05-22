@@ -19,11 +19,10 @@ def overlaps(rng_a, rng_b):
 def lowest_allowed(ranges):
     a = ranges[0]
     for i in range(1, len(ranges)):
-        b = ranges[i]
-        c = overlaps(a, b)
-        if c is None:
+        b = overlaps(a, ranges[i])
+        if b is None:
             break
-        a = c
+        a = b
 
     return a[1]+1
 
