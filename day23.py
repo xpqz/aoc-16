@@ -1,3 +1,44 @@
+"""
+This is the asmbunny code.
+
+0:  cpy a b
+1:  dec b
+2:  cpy a d      # L6
+3:  cpy 0 a
+
+# This is where all the time is spent (4-9)
+# which can be replaced with a = b*d
+4:  cpy b c      # L2
+    5:  inc a        # L1
+    6:  dec c
+    7:  jnz c -2     # if c goto L1
+    8:  dec d
+9:  jnz d -5     # if d goto L2
+
+10: dec b
+11: cpy b c
+12: cpy c d
+
+13: dec d        # L3
+14: inc c
+15: jnz d -2     # if d goto L3
+
+16: tgl c
+17: cpy -16 c
+18: jnz 1 c
+
+19: cpy 87 c
+20: jnz 80 d     # L5; goto address reg[d]
+
+    21: inc a        # L4
+    22: inc d
+    23: jnz d -2     # if d goto L4
+
+24: inc c
+25: jnz c -5     # if c goto L5
+
+"""
+
 def read_data(filename="data/input23.data"):
     with open(filename) as f:
         return f.read().splitlines()
@@ -21,7 +62,7 @@ def parse_data(lines):
 class Machine:
     def __init__(self, instructions):
         self.data = instructions
-        self.regs = {"a": 7, "b": 0, "c": 0, "d": 0}
+        self.regs = {"a": 0, "b": 0, "c": 0, "d": 0}
         self.ip = 0
 
     def icpy(self, instr):
@@ -30,7 +71,7 @@ class Machine:
         self.ip += 1
 
         if isinstance(reg_or_int1, int) and isinstance(reg_or_int2, int):
-            # bail-out if self-modified code cannot be executed
+            # skip silently if self-modified code cannot be executed
             return
 
         if isinstance(reg_or_int1, int):
@@ -66,6 +107,7 @@ class Machine:
         else:
             self.ip += 1
 
+
     def itgl(self, instr):
         reg_or_int = instr[0]
         if isinstance(reg_or_int, int):
@@ -90,12 +132,25 @@ class Machine:
     def step(self):
         if self.ip < 0 or self.ip >= len(self.data):
             return False
+        instr = self.data[self.ip]
+        getattr(self, f"i{instr[0]}")(instr[1:])
+        return True
+
+    def step2(self):
+        if self.ip < 0 or self.ip >= len(self.data):
+            return False
+
+        if self.ip == 4:  # L2 loop
+            self.regs["a"] += self.regs["d"]*self.regs["b"]
+            self.regs["c"] = 0
+            self.regs["d"] = 0
+            self.ip = 9
 
         instr = self.data[self.ip]
+
         getattr(self, f"i{instr[0]}")(instr[1:])
 
         return True
-
 
 if __name__ == "__main__":
 
@@ -103,8 +158,18 @@ if __name__ == "__main__":
     instr = parse_data(data)
 
     m = Machine(instr)
+    m.regs["a"] = 7
 
     while m.step():
         pass
 
-    print(m.regs)
+    print(m.regs["a"])
+
+    instr = parse_data(data)
+    m = Machine(instr)
+    m.regs["a"] = 12
+
+    while m.step2():
+        pass
+
+    print(m.regs["a"])
