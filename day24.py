@@ -1,6 +1,8 @@
 
 """
-This problem divides into two parts:
+Travelling Salesman-ish.
+
+First part of this problem divides into two parts:
 
 1. Create a costed, fully connected graph of the numbered nodes.
 Costs are the lengths of the shortest paths in the maze.
@@ -9,7 +11,43 @@ Costs are the lengths of the shortest paths in the maze.
 For (1) we repeatedly apply the a* search algorithm, using the
 manhattan distance as the heuristic.
 For (2) we find the MST, and do a pre-order traversal, visiting
-child nodes in order of number of children and edge cost.
+child nodes in order of number of children and edge cost. This
+isn't guaranteed to be correct for all graphs - it's a factor-2
+approximation worst case.
+
+Part two of the problem closes the loop: find the cheapest Hamiltonian
+_cycle_. Only difference is that we now want to visit nodes with
+more children first.
+
+But really ---  the correct path is trivially visible by eye-balling
+the MST:
+
+             0
+            / \
+        30 /   \ 44
+          /     \
+         1       7   (7-1: 54)
+         |
+     30  |
+         |
+         3
+         |
+     66  |
+         |
+         6
+         |
+    168  |
+         |
+         4
+        / \
+    54 /   \ 56
+      /     \
+     5       2  (5-2: 74)
+
+
+For the Hamiltonian path we need:  [0, 7, 1, 3, 6, 4, 5, 2]
+For the Hamiltonian cycle we need: [0, 1, 3, 6, 4, 5, 2, 7, 0]
+
 """
 from collections import defaultdict
 from graph import a_star_search, manhattan, prim_mst
@@ -52,7 +90,7 @@ def parse_data(lines):
 
 def traverse_mst(costed_graph, tree, node):
     """
-    Visit all nodes in pre-order of (number of children, cost)
+    Visit nodes with fewer children first.
     """
     yield node
 
@@ -64,6 +102,22 @@ def traverse_mst(costed_graph, tree, node):
 
     for _, _, n in sorted(child_nodes):
         yield from traverse_mst(costed_graph, tree, n)
+
+
+def traverse_mst2(costed_graph, tree, node):
+    """
+    Visit nodes with more children first.
+    """
+    yield node
+
+    child_nodes = []
+    for n in tree[node]:
+        ch_count = len(tree[n])
+        cost = costed_graph[node][n]
+        child_nodes.append((2-ch_count, cost, n))
+
+    for _, _, n in sorted(child_nodes):
+        yield from traverse_mst2(costed_graph, tree, n)
 
 def path_cost(costed_graph, path):
     total = 0
@@ -90,7 +144,12 @@ if __name__ == "__main__":
     minimal_spanning_tree = prim_mst(g, 0)
 
     cheapest_path = list(traverse_mst(g, minimal_spanning_tree, 0))
+    cost = path_cost(g, cheapest_path)
+    print(cost)
 
+    # Part 2
+    cheapest_path = list(traverse_mst2(g, minimal_spanning_tree, 0))
+    cheapest_path.append(0)
     cost = path_cost(g, cheapest_path)
 
     print(cost)
