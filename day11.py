@@ -147,7 +147,6 @@ def breadth_first_search(start):
         path.append(current)
         current = came_from[current]
 
-    path.append(start)
     path.reverse()
 
     return path
@@ -163,11 +162,7 @@ if __name__ == "__main__":
 
     seq = breadth_first_search(f)
 
-    # for m in seq:
-    #     display(m)
-    #     print()
-
-    print(len(seq)-1)  # We don't count the start state.
+    print(len(seq))
 
     # Part 2: more elements on F1. THIS TAKES A WHILE!
     f = floors([
@@ -178,4 +173,4 @@ if __name__ == "__main__":
     ])
 
     seq = breadth_first_search(f)
-    print(len(seq)-1)  # We don't count the start state.
+    print(len(seq))
