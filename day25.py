@@ -153,9 +153,10 @@ So we need a positive number that added to 2541 produces the following three LS 
 
 """
 
+from itertools import count
+
 def run():
-    aa = 1
-    while True:
+    for aa in count(1):
         a = aa
 
         d = a + 2541
@@ -169,8 +170,6 @@ def run():
 
         if v == "010101010101":
             return aa
-
-        aa += 1
 
 if __name__ == "__main__":
     print(run())
