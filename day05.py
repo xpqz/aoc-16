@@ -26,7 +26,7 @@ def passw2(seed):
             if pw[index] == "_":
                 pw[index] = d[6]
                 print("".join(pw), end="\r", flush=True)
-                if not "_" in pw:
+                if "_" not in pw:
                     break
 
     return "".join(pw)
