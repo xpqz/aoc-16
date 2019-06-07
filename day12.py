@@ -1,6 +1,3 @@
-from collections import deque
-
-
 def read_data(filename="data/input12.data"):
     with open(filename) as f:
         return f.read().splitlines()
