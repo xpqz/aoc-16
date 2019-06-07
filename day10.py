@@ -56,7 +56,7 @@ def find_low_high(b, l, h):
         state = {}
         twos = has_two(b)
 
-        if len(twos) == 0:
+        if not twos:
             return False
 
         for bid, spec in b.items():
@@ -82,7 +82,7 @@ def output_product(b):
         state = {}
         twos = has_two(b)
 
-        if len(twos) == 0:
+        if not twos:
             return False
 
         for bid, spec in b.items():
